@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="facebook_app_id">1570462169873394</string>
     <string name="app_name">V-Effects</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -45,11 +46,12 @@
     <string name="television">Television</string>
     <string name="twirl">Twirl</string>
     <string name="vignette">Vignette</string>
-    
     <string name="done">Done</string>
     <string name="ok">OK</string>
     <string name="apply_effect">Apply\nEffect</string>
     <string name="apply_texture">Apply\nTexture</string>
     <string name="save">Save</string>
+    <string name="title_activity_share_photo">SharePhotoActivity</string>
+    <string name="title_activity_facebook_albums">FacebookAlbumsActivity</string>
 
 </resources>
