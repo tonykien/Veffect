@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tonyk.vcameraeffects"
+    package="com.tonyk.veffects"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -13,7 +13,6 @@
 
     <!-- Used to avoid sending an ad request if there is no connectivity. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -32,6 +31,20 @@
             </intent-filter>
         </activity>
 
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <provider
+            android:name="com.facebook.NativeAppCallContentProvider"
+            android:authorities="com.facebook.app.NativeAppCallContentProvider1570462169873394"
+            android:exported="true" />
+
         <!-- Activity required to show ad overlays. -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -44,12 +57,20 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.tonyk.vcameraeffects.activity.ApplyEffectActivity"
+            android:name=".activity.ApplyEffectActivity"
             android:label="@string/title_activity_apply_effect" >
         </activity>
-        <activity android:name="com.tonyk.vcameraeffects.activity.ApplyTextureActivity" >
+        <activity android:name=".activity.ApplyTextureActivity" >
         </activity>
-        <activity android:name="com.tonyk.vcameraeffects.activity.ApplyBorderActivity" />
+        <activity android:name=".activity.ApplyBorderActivity" />
+        <activity
+            android:name=".activity.SharePhotoActivity"
+            android:label="@string/title_activity_share_photo" >
+        </activity>
+        <activity
+            android:name="com.tonyk.veffects.activity.fbalbums.FacebookAlbumsActivity"
+            android:label="@string/title_activity_facebook_albums" >
+        </activity>
     </application>
 
 </manifest>
