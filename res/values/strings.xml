@@ -53,5 +53,6 @@
     <string name="save">Save</string>
     <string name="title_activity_share_photo">SharePhotoActivity</string>
     <string name="title_activity_facebook_albums">FacebookAlbumsActivity</string>
+    <string name="title_activity_crop_image">CropImageActivity</string>
 
 </resources>

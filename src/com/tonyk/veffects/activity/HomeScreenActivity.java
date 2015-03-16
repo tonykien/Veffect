@@ -1,11 +1,11 @@
 package com.tonyk.veffects.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +18,7 @@ import com.google.android.gms.ads.AdView;
 import com.tonyk.veffects.R;
 import com.tonyk.veffects.activity.fbalbums.FacebookAlbumsActivity;
 
-public class HomeScreenActivity extends ActionBarActivity {
+public class HomeScreenActivity extends Activity {
 
 	private static final int REQUEST_CODE_LOAD_IMAGE = 1111;
 	public static final String PHOTO_PATH_KEY = "photo_path_key";
@@ -80,7 +80,7 @@ public class HomeScreenActivity extends ActionBarActivity {
 			String picturePath = cursor.getString(columnIndex);
 			cursor.close();
 
-			Intent i = new Intent(this, ApplyEffectActivity.class);
+			Intent i = new Intent(this, CropImageActivity.class);
 			i.putExtra(PHOTO_PATH_KEY, picturePath);
 			startActivity(i);
 

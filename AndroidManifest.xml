@@ -68,8 +68,12 @@
             android:label="@string/title_activity_share_photo" >
         </activity>
         <activity
-            android:name="com.tonyk.veffects.activity.fbalbums.FacebookAlbumsActivity"
+            android:name=".activity.fbalbums.FacebookAlbumsActivity"
             android:label="@string/title_activity_facebook_albums" >
+        </activity>
+        <activity
+            android:name="com.tonyk.veffects.activity.CropImageActivity"
+            android:label="@string/title_activity_crop_image" >
         </activity>
     </application>
 
