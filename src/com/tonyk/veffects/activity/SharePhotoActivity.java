@@ -16,6 +16,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
 import com.tonyk.veffects.R;
+import com.tonyk.veffects.config.Define;
 import com.tonyk.veffects.custom.ALog;
 
 public class SharePhotoActivity extends Activity {
@@ -37,7 +38,7 @@ public class SharePhotoActivity extends Activity {
 		mUiHelper.onCreate(savedInstanceState);
 		
 		/* Load photo and show in preview */
-		String path = getIntent().getStringExtra(ApplyTextureActivity.EFFECTED_BITMAP);
+		String path = getIntent().getStringExtra(Define.KEY_TEMP_BITMAP_PATH);
 		mImages.add(BitmapFactory.decodeFile(path));
 	}
 

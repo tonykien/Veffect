@@ -2,13 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="${relativePackage}.${activityClass}" >
+    tools:context="${relativePackage}.${activityClass}"
+    android:background="@color/background_color" >
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" >
 
         <Button
@@ -18,7 +19,10 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:text="No crop" />
+            android:text="@string/no"
+            android:onClick="onBtnNotCropClick"
+            android:background="@drawable/fab_shape_rectangle_gray"
+            android:textColor="@color/text_color" />
 
         <Button
             android:id="@+id/button2"
@@ -27,26 +31,31 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="Crop" />
+            android:text="@string/crop"
+            android:onClick="onBtnCropClick"
+            android:background="@drawable/fab_shape_rectangle"
+            android:textColor="@color/text_color" />
     </RelativeLayout>
 
     <ImageView
         android:id="@+id/ivPreview"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@id/relativeLayout1"
+        android:layout_above="@id/relativeLayout1"
         android:layout_centerHorizontal="true"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter" 
+        android:contentDescription="@string/hello_world" />
     
     <ImageView
         android:id="@+id/ivRectangleMask"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@id/relativeLayout1"
+        android:layout_above="@id/relativeLayout1"
         android:layout_alignLeft="@id/ivPreview"
         android:layout_alignRight="@id/ivPreview"
         android:layout_centerHorizontal="true"
         android:scaleType="matrix"
-        android:background="@android:color/transparent" />
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/hello_world" />
 
 </RelativeLayout>

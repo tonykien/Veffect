@@ -1,8 +1,13 @@
 package com.tonyk.veffects.activity;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,6 +22,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.tonyk.veffects.R;
 import com.tonyk.veffects.activity.fbalbums.FacebookAlbumsActivity;
+import com.tonyk.veffects.config.Define;
+import com.tonyk.veffects.custom.ALog;
 
 public class HomeScreenActivity extends Activity {
 
@@ -69,20 +76,57 @@ public class HomeScreenActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_CODE_LOAD_IMAGE && resultCode == RESULT_OK
-				&& null != data) {
+		if (requestCode == REQUEST_CODE_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+			long time = System.currentTimeMillis();
 			Uri selectedImage = data.getData();
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			Cursor cursor = getContentResolver().query(selectedImage,
-					filePathColumn, null, null, null);
+			Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null,
+					null);
 			cursor.moveToFirst();
 			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 			String picturePath = cursor.getString(columnIndex);
 			cursor.close();
 
-			Intent i = new Intent(this, CropImageActivity.class);
-			i.putExtra(PHOTO_PATH_KEY, picturePath);
-			startActivity(i);
+			Options o = new Options();
+			BitmapFactory.decodeFile(picturePath, o);
+			float picRatio = (float) o.outHeight / o.outWidth;
+			
+			ExifInterface exif;
+			try {
+				exif = new ExifInterface(picturePath);
+				int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+				if (orientation == ExifInterface.ORIENTATION_ROTATE_90
+						|| orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+					if (picRatio > 1) {
+						// TODO landscape
+					} else {
+						// TODO portrait
+					}
+				} else {
+					if (picRatio >= 1) {
+						// TODO portrait
+					} else {
+						// TODO landscape
+					}
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if (picRatio < 1) {
+				picRatio = 1f / picRatio;
+			}
+			if (Math.abs(picRatio - Define.IMAGE_RATIO) < 0.1f) {
+				Intent i = new Intent(this, ApplyEffectActivity.class);
+				i.putExtra(PHOTO_PATH_KEY, picturePath);
+				startActivity(i);
+			} else {
+				Intent i = new Intent(this, CropImageActivity.class);
+				i.putExtra(PHOTO_PATH_KEY, picturePath);
+				startActivity(i);
+			}
+			ALog.e("home", "time:" + (System.currentTimeMillis() - time));
 
 			// mPath = picturePath;
 			// mBmpResized = resizeBitmap(picturePath, 1000);
@@ -118,7 +162,7 @@ public class HomeScreenActivity extends Activity {
 				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		startActivityForResult(i, REQUEST_CODE_LOAD_IMAGE);
 	}
-	
+
 	public void onBtnFacebookPhotoClick(View v) {
 		Intent i = new Intent(this, FacebookAlbumsActivity.class);
 		startActivity(i);
@@ -128,8 +172,7 @@ public class HomeScreenActivity extends Activity {
 
 		@Override
 		public void onAdLoaded() {
-			Toast.makeText(HomeScreenActivity.this, "onAdLoaded",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(HomeScreenActivity.this, "onAdLoaded", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -150,26 +193,23 @@ public class HomeScreenActivity extends Activity {
 				break;
 			}
 			Toast.makeText(HomeScreenActivity.this,
-					String.format("onAdFailedToLoad(%s)", errorReason),
-					Toast.LENGTH_SHORT).show();
+					String.format("onAdFailedToLoad(%s)", errorReason), Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onAdOpened() {
-			Toast.makeText(HomeScreenActivity.this, "onAdOpened()",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(HomeScreenActivity.this, "onAdOpened()", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onAdClosed() {
-			Toast.makeText(HomeScreenActivity.this, "onAdClosed()",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(HomeScreenActivity.this, "onAdClosed()", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onAdLeftApplication() {
-			Toast.makeText(HomeScreenActivity.this, "onAdLeftApplication()",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(HomeScreenActivity.this, "onAdLeftApplication()", Toast.LENGTH_SHORT)
+					.show();
 		}
 	};
 }

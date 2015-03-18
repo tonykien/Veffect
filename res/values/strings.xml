@@ -54,5 +54,11 @@
     <string name="title_activity_share_photo">SharePhotoActivity</string>
     <string name="title_activity_facebook_albums">FacebookAlbumsActivity</string>
     <string name="title_activity_crop_image">CropImageActivity</string>
+    <string name="crop">Crop</string>
+    <string name="no">No</string>
+    
+    <!-- dialog -->
+    <string name="progressing">Progressing</string>
+    <string name="err_crop">Has error when crop</string>
 
 </resources>

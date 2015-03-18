@@ -10,6 +10,7 @@ import java.util.Random;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,7 +24,6 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
@@ -36,11 +36,12 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.tonyk.veffects.R;
+import com.tonyk.veffects.config.Define;
 import com.tonyk.veffects.custom.ALog;
 import com.tonyk.veffects.gl.GLToolbox;
 import com.tonyk.veffects.gl.TextureRenderer;
 
-public class ApplyBorderActivity extends ActionBarActivity implements OnClickListener,
+public class ApplyBorderActivity extends Activity implements OnClickListener,
 		GLSurfaceView.Renderer {
 
 	public static final float PREVIEW_RATIO = 4f / 3;
@@ -96,7 +97,7 @@ public class ApplyBorderActivity extends ActionBarActivity implements OnClickLis
 		setContentView(R.layout.activity_apply_border);
 
 		/* Load photo and show in preview */
-		String path = getIntent().getStringExtra(ApplyTextureActivity.EFFECTED_BITMAP);
+		String path = getIntent().getStringExtra(Define.KEY_TEMP_BITMAP_PATH);
 		mSrcBmp = BitmapFactory.decodeFile(path);
 		File tempPhoto = new File(path);
 		tempPhoto.delete();
@@ -293,14 +294,14 @@ public class ApplyBorderActivity extends ActionBarActivity implements OnClickLis
 		if (mBtnSavePressed) {
 			mBtnSavePressed = false;
 			String root = Environment.getExternalStorageDirectory().toString();
-			File myDir = new File(root + "/ImageEffectFactory");
+			File myDir = new File(root + Define.PATH_VEFFECT);
 			myDir.mkdirs();
 			Random generator = new Random();
 			int n = 10000;
 			n = generator.nextInt(n);
 
-			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-			String fname = "Image_" + timeStamp + ".jpg";
+			String timeStamp = new SimpleDateFormat(Define.DATETIME_FORMAT).format(new Date());
+			String fname = Define.FILENAME_PRE + timeStamp + Define.FILENAME_EXTENSION;
 
 			File file = new File(myDir, fname);
 			if (file.exists()) file.delete();
@@ -326,7 +327,7 @@ public class ApplyBorderActivity extends ActionBarActivity implements OnClickLis
 				
 				Intent i = new Intent(ApplyBorderActivity.this, SharePhotoActivity.class);
 				// i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				i.putExtra(ApplyTextureActivity.EFFECTED_BITMAP, file.getAbsolutePath());
+				i.putExtra(Define.KEY_TEMP_BITMAP_PATH, file.getAbsolutePath());
 				startActivity(i);
 				
 				// Toast.makeText(this, "save image",

@@ -10,6 +10,7 @@ import java.util.Random;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,7 +24,6 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
@@ -38,18 +38,18 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.tonyk.veffects.R;
+import com.tonyk.veffects.config.Define;
 import com.tonyk.veffects.custom.ALog;
 import com.tonyk.veffects.gl.GLToolbox;
 import com.tonyk.veffects.gl.TextureRenderer;
 import com.tonyk.veffects.utils.BitmapUtil;
 
-public class ApplyTextureActivity extends ActionBarActivity implements OnClickListener,
+public class ApplyTextureActivity extends Activity implements OnClickListener,
 		GLSurfaceView.Renderer {
 
 	public static final float PREVIEW_RATIO = 4f / 3;
 
 	public static final String TAG = "ApplyTextureActivity";
-	public static final String EFFECTED_BITMAP = "effected_bitmap";
 
 	private AdView mAdView;
 
@@ -101,7 +101,7 @@ public class ApplyTextureActivity extends ActionBarActivity implements OnClickLi
 		setContentView(R.layout.activity_apply_texture);
 
 		/* Load photo and show in preview */
-		String path = getIntent().getStringExtra(EFFECTED_BITMAP);
+		String path = getIntent().getStringExtra(Define.KEY_TEMP_BITMAP_PATH);
 		mSrcBmp = BitmapFactory.decodeFile(path);
 		File tempPhoto = new File(path);
 		tempPhoto.delete();
@@ -328,14 +328,14 @@ public class ApplyTextureActivity extends ActionBarActivity implements OnClickLi
 		if (mBtnApplyTexturePressed) {
 			mBtnApplyTexturePressed = false;
 			String root = Environment.getExternalStorageDirectory().toString();
-			File myDir = new File(root + "/ImageEffectFactory");
+			File myDir = new File(root + Define.PATH_VEFFECT);
 			myDir.mkdirs();
 			Random generator = new Random();
 			int n = 10000;
 			n = generator.nextInt(n);
 
-			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-			String fname = "Image_" + timeStamp + ".jpg";
+			String timeStamp = new SimpleDateFormat(Define.DATETIME_FORMAT).format(new Date());
+			String fname = Define.FILENAME_PRE + timeStamp + Define.FILENAME_EXTENSION;
 
 			File file = new File(myDir, fname);
 			if (file.exists()) file.delete();
@@ -360,7 +360,7 @@ public class ApplyTextureActivity extends ActionBarActivity implements OnClickLi
 				out.close();
 				
 				Intent i = new Intent(ApplyTextureActivity.this, ApplyBorderActivity.class);
-				i.putExtra(EFFECTED_BITMAP, file.getAbsolutePath());
+				i.putExtra(Define.KEY_TEMP_BITMAP_PATH, file.getAbsolutePath());
 				startActivity(i);
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -10,6 +10,7 @@ import java.util.Random;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -22,7 +23,6 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.tonyk.veffects.R;
+import com.tonyk.veffects.config.Define;
 import com.tonyk.veffects.custom.ALog;
 import com.tonyk.veffects.effects.Brick;
 import com.tonyk.veffects.effects.Effects;
@@ -57,7 +58,7 @@ import com.tonyk.veffects.gl.GLToolbox;
 import com.tonyk.veffects.gl.TextureRenderer;
 import com.tonyk.veffects.utils.BitmapUtil;
 
-public class ApplyEffectActivity extends ActionBarActivity implements OnTouchListener,
+public class ApplyEffectActivity extends Activity implements OnTouchListener,
 		OnClickListener, GLSurfaceView.Renderer {
 
 	public static final float PREVIEW_RATIO = 4f / 3;
@@ -116,8 +117,17 @@ public class ApplyEffectActivity extends ActionBarActivity implements OnTouchLis
 
 		/* Load photo and show in preview */
 		String path = getIntent().getStringExtra(HomeScreenActivity.PHOTO_PATH_KEY);
-		mSrcBmp = BitmapUtil.resizeBitmap(path, 1000);
-		mSrcBmp4Iv = BitmapUtil.resizeBitmap(path, 500);
+		String pathTemp = getIntent().getStringExtra(Define.KEY_TEMP_BITMAP_PATH);
+		
+		if (path != null) {
+			mSrcBmp = BitmapUtil.resizeBitmap(path, 1000);
+			mSrcBmp4Iv = BitmapUtil.resizeBitmap(path, 500);
+		} else {
+			mSrcBmp = BitmapUtil.resizeBitmap(pathTemp, 1000);
+			mSrcBmp4Iv = BitmapUtil.resizeBitmap(pathTemp, 500);
+			File tempPhoto = new File(pathTemp);
+			tempPhoto.delete();
+		}
 
 		mAdView = (AdView) findViewById(R.id.adView);
 
@@ -537,14 +547,14 @@ public class ApplyEffectActivity extends ActionBarActivity implements OnTouchLis
 		if (mBtnApplyEffectPressed) {
 			mBtnApplyEffectPressed = false;
 			String root = Environment.getExternalStorageDirectory().toString();
-			File myDir = new File(root + "/ImageEffectFactory");
+			File myDir = new File(root + Define.PATH_VEFFECT);
 			myDir.mkdirs();
 			Random generator = new Random();
 			int n = 10000;
 			n = generator.nextInt(n);
 
-			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-			String fname = "Image_" + timeStamp + ".jpg";
+			String timeStamp = new SimpleDateFormat(Define.DATETIME_FORMAT).format(new Date());
+			String fname = Define.FILENAME_PRE + timeStamp + Define.FILENAME_EXTENSION;
 
 			File file = new File(myDir, fname);
 			if (file.exists()) file.delete();
@@ -569,7 +579,7 @@ public class ApplyEffectActivity extends ActionBarActivity implements OnTouchLis
 				out.close();
 				
 				Intent i = new Intent(ApplyEffectActivity.this, ApplyTextureActivity.class);
-				i.putExtra(ApplyTextureActivity.EFFECTED_BITMAP, file.getAbsolutePath());
+				i.putExtra(Define.KEY_TEMP_BITMAP_PATH, file.getAbsolutePath());
 				startActivity(i);
 				// Toast.makeText(this, "save image",
 				// Toast.LENGTH_SHORT).show();
@@ -627,10 +637,8 @@ public class ApplyEffectActivity extends ActionBarActivity implements OnTouchLis
 			break;
 
 		case R.id.ivAutoFix:
-//			mEffect = effectFactory.createEffect(EffectFactory.EFFECT_AUTOFIX);
-//			mEffect.setParameter("scale", 0.5f);
-			mEffect = effectFactory.createEffect(EffectFactory.EFFECT_BITMAPOVERLAY);
-			mEffect.setParameter("bitmap", BitmapUtil.getBitmapFromAsset(this, "bubble30.png"));
+			mEffect = effectFactory.createEffect(EffectFactory.EFFECT_AUTOFIX);
+			mEffect.setParameter("scale", 0.5f);
 			break;
 
 		case R.id.ivBlackWhite:
